@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const SingIn = () => {
+const Search = () => {
   return (
     <View>
-      <Text>SingIn</Text>
+      <Text>Search</Text>
     </View>
   );
 };
 
-export default SingIn;
+export default Search;

@@ -28,8 +28,8 @@ export default function RootLayout() {
   if (!fontsLoaded && !error) return null; // Return null if the fonts are not loaded and there is no error
 
   return (
-    <Stack>
-      <Stack.Screen name="index" />
+    <Stack >
+      <Stack.Screen name="index" options={{ headerShown: false }} />
     </Stack>
   );
 }

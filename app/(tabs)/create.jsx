@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const SingIn = () => {
+const Create = () => {
   return (
     <View>
-      <Text>SingIn</Text>
+      <Text>Create</Text>
     </View>
   );
 };
 
-export default SingIn;
+export default Create;
