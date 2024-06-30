@@ -6,8 +6,9 @@ import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { Link } from "expo-router";
 
-const SignIn = () => {
+const SignUp = () => {
   const [form, setform] = useState({
+    username: "",
     email: "",
     password: "",
   });
@@ -17,15 +18,29 @@ const SignIn = () => {
   return (
     <SafeAreaView className="h-full bg-primary">
       <ScrollView>
-        <View className="my-[20vh] w-full px-4 " >
+        <View className="my-[15vh] w-full px-4 " >
           <Image
             source={images.logo}
             resizeMode="contain"
             className="w-[115px]"
           />
           <Text className="mb-6 font-psemibold text-xl text-white">
-            Sign in
+            Sign Up
           </Text>
+
+          <FormField
+            title="Username"
+            placeholder="Your unique username"
+            value={form.username}
+            handleChangeText={(e) =>
+              setform({
+                ...form,
+                username: e
+              })
+            }
+            extraStyles="mb-5"
+            keyboardType="email-address"
+          />
 
           <FormField
             title="Email"
@@ -55,14 +70,14 @@ const SignIn = () => {
           />
 
           <CustomButton
-            title={"Sign In"}
+            title={"Sign up"}
             containerStyles={"mt-8"}
             isLoaded={isSubmitting}
           />
 
           <View className="flex-row justify-center mt-4">
-            <Text className=" text-gray-400  "> Don't have an account? </Text>
-            <Link href='/sign-up' className="text-secondary font-psemibold"> Sign Up </Link>
+            <Text className=" text-gray-400  "> Already have an account? </Text>
+            <Link href='/sign-in' className="text-secondary font-psemibold"> Login </Link>
           </View>
 
         </View>
@@ -71,4 +86,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

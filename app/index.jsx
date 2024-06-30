@@ -53,6 +53,5 @@ export default function App() {
       <StatusBar backgroundColor="#161622" style="light" />
     </SafeAreaView>
 
-    // <View className="h-full bg-primary"></View>
   );
 }
