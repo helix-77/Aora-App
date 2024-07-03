@@ -1,23 +1,47 @@
-import { View, Text, SafeAreaView, ScrollView, Image } from "react-native";
+import { View, Text, SafeAreaView, ScrollView, Image, Alert } from "react-native";
 import React, { useState } from "react";
 
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { Link } from "expo-router";
+import { signIn } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
-  const [form, setform] = useState({
+  const { setUser, setIsLogged } = useGlobalContext();
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const handleSubmit = async () => {
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    setSubmitting(true);
+
+    try {
+      await signIn(form.email, form.password);
+      const result = await getCurrentUser();
+      setUser(result);
+      setIsLogged(true);
+
+      Alert.alert("Success", "User signed in successfully");
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="h-full bg-primary">
       <ScrollView>
-        <View className="my-[20vh] w-full px-4 " >
+        <View className="my-[18vh] w-full px-4 " >
           <Image
             source={images.logo}
             resizeMode="contain"
@@ -58,7 +82,9 @@ const SignIn = () => {
             title={"Sign In"}
             containerStyles={"mt-8"}
             isLoaded={isSubmitting}
+            onclick={handleSubmit}
           />
+
 
           <View className="flex-row justify-center mt-4">
             <Text className=" text-gray-400  "> Don't have an account? </Text>

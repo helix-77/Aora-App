@@ -1,10 +1,18 @@
-import { View, Text, SafeAreaView, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { createUser } from "../../lib/appwrite";
 
 const SignUp = () => {
   const [form, setform] = useState({
@@ -13,12 +21,29 @@ const SignUp = () => {
     password: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!form.username || !form.email || !form.password)
+      return Alert.alert("Please fill all the fields");
+
+    setIsSubmitting(true);
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+
+      // set it to the global state....
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="h-full bg-primary">
       <ScrollView>
-        <View className="my-[15vh] w-full px-4 " >
+        <View className="my-[12vh] w-full px-4">
           <Image
             source={images.logo}
             resizeMode="contain"
@@ -35,7 +60,7 @@ const SignUp = () => {
             handleChangeText={(e) =>
               setform({
                 ...form,
-                username: e
+                username: e,
               })
             }
             extraStyles="mb-5"
@@ -49,7 +74,7 @@ const SignUp = () => {
             handleChangeText={(e) =>
               setform({
                 ...form,
-                email: e
+                email: e,
               })
             }
             extraStyles=""
@@ -62,24 +87,26 @@ const SignUp = () => {
             handleChangeText={(e) =>
               setform({
                 ...form,
-                password: e
+                password: e,
               })
             }
             extraStyles="mt-5"
-
           />
 
           <CustomButton
             title={"Sign up"}
             containerStyles={"mt-8"}
             isLoaded={isSubmitting}
+            onclick={handleSubmit}
           />
 
-          <View className="flex-row justify-center mt-4">
-            <Text className=" text-gray-400  "> Already have an account? </Text>
-            <Link href='/sign-in' className="text-secondary font-psemibold"> Login </Link>
+          <View className="mt-4 flex-row justify-center">
+            <Text className="text-gray-400"> Already have an account? </Text>
+            <Link href="/sign-in" className="font-psemibold text-secondary">
+              {" "}
+              Login{" "}
+            </Link>
           </View>
-
         </View>
       </ScrollView>
     </SafeAreaView>
