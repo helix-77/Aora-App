@@ -1,8 +1,8 @@
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
-import { icons } from "../constants";
+import { Images, icons, images } from "../constants";
 
-const FormField = ({
+const SearchInput = ({
     title,
     placeholder,
     value,
@@ -14,34 +14,30 @@ const FormField = ({
 
     return (
         <View className={`space-y-2 ${extraStyles} `}>
-            {/* title */}
-            <Text className="font-pregular text-sm text-[#CDCDE0]">{title}</Text>
 
             {/* text-field */}
             <View className="h-12 w-full flex-row justify-center rounded-xl border-2 border-black-200 bg-black-100 px-4 focus:border-secondary">
                 <TextInput
-                    className="flex-1 font-psemibold text-white"
+                    className="flex-1 font-pregular text-white text-base "
                     value={value}
                     placeholder={placeholder}
                     placeholderTextColor="#7b7b8b"
                     onChangeText={handleChangeText}
                     secureTextEntry={title === "Password" && !showPassword}
                 />
-                {title === "Password" && (
-                    <TouchableOpacity
-                        className="justify-center"
-                        onPress={() => setShowPassword(!showPassword)}
-                    >
-                        <Image
-                            source={!showPassword ? icons.eye : icons.eyeHide}
-                            className="h-6 w-6"
-                            resizeMode="contain"
-                        />
-                    </TouchableOpacity>
-                )}
+
+                <TouchableOpacity className="justify-center" >
+                    <Image source={icons.search}
+                        className="h-5 w-5"
+                        resizeMode="contain"
+
+                    />
+                </TouchableOpacity>
+
+
             </View>
         </View>
     );
 };
 
-export default FormField;
+export default SearchInput;
