@@ -13,15 +13,17 @@ import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { Link, router } from "expo-router";
 import { createUser } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
-  const [form, setform] = useState({
+  const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLogged } = useGlobalContext();
 
   const handleSubmit = async () => {
     if (!form.username || !form.email || !form.password)
@@ -30,8 +32,8 @@ const SignUp = () => {
     setIsSubmitting(true);
     try {
       const result = await createUser(form.email, form.password, form.username);
-
-      // set it to the global state....
+      setUser(result);
+      setIsLogged(true);
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -58,7 +60,7 @@ const SignUp = () => {
             placeholder="Your unique username"
             value={form.username}
             handleChangeText={(e) =>
-              setform({
+              setForm({
                 ...form,
                 username: e,
               })
@@ -72,7 +74,7 @@ const SignUp = () => {
             placeholder="Your Email..."
             value={form.email}
             handleChangeText={(e) =>
-              setform({
+              setForm({
                 ...form,
                 email: e,
               })
@@ -85,7 +87,7 @@ const SignUp = () => {
             placeholder="Enter your password"
             value={form.password}
             handleChangeText={(e) =>
-              setform({
+              setForm({
                 ...form,
                 password: e,
               })

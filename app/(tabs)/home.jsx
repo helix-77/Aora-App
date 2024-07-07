@@ -12,13 +12,15 @@ import { images } from "../../constants";
 import SearchInput from "../../components/SearchInput";
 import Trending from "../../components/Trending";
 import EmptyState from "../../components/EmptyState";
-import { getAllPosts } from "../../lib/appwrite";
+import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
 import useAppwrite from "../../lib/useAppwrite";
 import VideoCard from "../../components/VideoCard";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Home = () => {
-
-  const { data: posts, refetch } = useAppwrite(getAllPosts)
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
+  const { user } = useGlobalContext();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -28,22 +30,20 @@ const Home = () => {
     setRefreshing(false);
   };
 
-  console.log(posts)
+  // console.log(posts);
   return (
     <SafeAreaView className="h-full bg-primary">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <VideoCard post={item} />
-        )}
+        renderItem={({ item }) => <VideoCard post={item} />}
         ListHeaderComponent={() => (
           <>
             <View className="mx-5 mt-5 flex-1 flex-row justify-between bg-primary">
               <View>
-                <Text className="mb-2 text-gray-200">Welcome Back</Text>
+                <Text className="mb-2 text-gray-200">Welcome Back, </Text>
                 <Text className="font-psemibold text-3xl text-white">
-                  jsmastery
+                  {user?.username}
                 </Text>
               </View>
               <View className="">
@@ -68,7 +68,7 @@ const Home = () => {
                 Trending Videos
               </Text>
 
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
+              <Trending posts={latestPosts ?? []} />
             </View>
           </>
         )}

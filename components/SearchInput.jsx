@@ -1,43 +1,61 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 import { Images, icons, images } from "../constants";
+import { router, usePathname } from "expo-router";
 
 const SearchInput = ({
-    title,
-    placeholder,
-    value,
-    handleChangeText,
-    extraStyles,
-    ...props
+  title,
+  placeholder,
+  value,
+  handleChangeText,
+  extraStyles,
+  initialQuery,
+  ...props
 }) => {
-    const [showPassword, setShowPassword] = useState(false);
+  const pathName = usePathname();
+  const [query, setQuery] = useState(initialQuery || "");
+  return (
+    <View className={`space-y-2 ${extraStyles} `}>
+      {/* text-field */}
+      <View className="h-12 w-full flex-row justify-center rounded-xl border-2 border-black-200 bg-black-100 px-4 focus:border-secondary">
+        <TextInput
+          className="flex-1 font-pregular text-base text-white"
+          value={query}
+          placeholder={placeholder}
+          placeholderTextColor="#7b7b8b"
+          onChangeText={(e) => setQuery(e)}
+        />
 
-    return (
-        <View className={`space-y-2 ${extraStyles} `}>
+        <TouchableOpacity
+          className="justify-center"
+          onPress={() => {
+            if (!query) {
+              return Alert.alert("Please enter a valid search query");
+            }
 
-            {/* text-field */}
-            <View className="h-12 w-full flex-row justify-center rounded-xl border-2 border-black-200 bg-black-100 px-4 focus:border-secondary">
-                <TextInput
-                    className="flex-1 font-pregular text-white text-base "
-                    value={value}
-                    placeholder={placeholder}
-                    placeholderTextColor="#7b7b8b"
-                    onChangeText={handleChangeText}
-                    secureTextEntry={title === "Password" && !showPassword}
-                />
-
-                <TouchableOpacity className="justify-center" >
-                    <Image source={icons.search}
-                        className="h-5 w-5"
-                        resizeMode="contain"
-
-                    />
-                </TouchableOpacity>
-
-
-            </View>
-        </View>
-    );
+            if (pathName.startsWith("/search/")) {
+              router.setParams({ query });
+            } else {
+              router.push(`/search/${query}`);
+            }
+          }}
+        >
+          <Image
+            source={icons.search}
+            className="h-5 w-5"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
 export default SearchInput;

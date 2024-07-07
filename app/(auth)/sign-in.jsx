@@ -1,11 +1,18 @@
-import { View, Text, SafeAreaView, ScrollView, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
-import { signIn } from "../../lib/appwrite";
+import { Link, router } from "expo-router";
+import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
@@ -29,7 +36,6 @@ const SignIn = () => {
       setUser(result);
       setIsLogged(true);
 
-      Alert.alert("Success", "User signed in successfully");
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -41,7 +47,7 @@ const SignIn = () => {
   return (
     <SafeAreaView className="h-full bg-primary">
       <ScrollView>
-        <View className="my-[18vh] w-full px-4 " >
+        <View className="my-[18vh] w-full px-4">
           <Image
             source={images.logo}
             resizeMode="contain"
@@ -56,9 +62,9 @@ const SignIn = () => {
             placeholder="Your Email..."
             value={form.email}
             handleChangeText={(e) =>
-              setform({
+              setForm({
                 ...form,
-                email: e
+                email: e,
               })
             }
             extraStyles=""
@@ -69,13 +75,12 @@ const SignIn = () => {
             placeholder="Enter your password"
             value={form.password}
             handleChangeText={(e) =>
-              setform({
+              setForm({
                 ...form,
-                password: e
+                password: e,
               })
             }
             extraStyles="mt-5"
-
           />
 
           <CustomButton
@@ -85,12 +90,13 @@ const SignIn = () => {
             onclick={handleSubmit}
           />
 
-
-          <View className="flex-row justify-center mt-4">
-            <Text className=" text-gray-400  "> Don't have an account? </Text>
-            <Link href='/sign-up' className="text-secondary font-psemibold"> Sign Up </Link>
+          <View className="mt-4 flex-row justify-center">
+            <Text className="text-gray-400"> Don't have an account? </Text>
+            <Link href="/sign-up" className="font-psemibold text-secondary">
+              {" "}
+              Sign Up{" "}
+            </Link>
           </View>
-
         </View>
       </ScrollView>
     </SafeAreaView>
